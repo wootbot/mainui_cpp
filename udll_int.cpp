@@ -14,6 +14,7 @@ GNU General Public License for more details.
 */
 
 
+#include "build.h"
 #include "extdll_menu.h"
 #include "BaseMenu.h"
 #include "Utils.h"
@@ -65,7 +66,11 @@ extern "C" EXPORT int GetMenuAPI(UI_FUNCTIONS *pFunctionTable, ui_enginefuncs_t*
 
 static UI_EXTENDED_FUNCTIONS gExtendedTable =
 {
+#if XASH_PSP
+	NULL, // no touch screen
+#else
 	AddTouchButtonToList,
+#endif
 	UI_MenuResetPing_f,
 	UI_ConnectionWarning_f,
 	UI_UpdateDialog,

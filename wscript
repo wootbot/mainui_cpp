@@ -53,6 +53,11 @@ def configure(conf):
 			conf.define('MAINUI_USE_FREETYPE', 1)
 
 def build(bld):
+	excl = []
+	if bld.env.DEST_OS == 'psp':
+		# no touch screen or gyroscope: memory
+		excl += ['menus/Touch*.cpp', 'menus/Gyro.cpp']
+
 	source = bld.path.ant_glob([
 		'*.cpp',
 		'miniutl/*.cpp',
@@ -61,7 +66,7 @@ def build(bld):
 		'menus/dynamic/*.cpp',
 		'model/*.cpp',
 		'controls/*.cpp'
-	])
+	], excl = excl)
 
 	includes = [
 		'.',
