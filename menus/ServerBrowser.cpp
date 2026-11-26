@@ -380,6 +380,7 @@ public:
 	void Show() override;
 	void Hide() override;
 	bool KeyUp( int key ) override;
+	bool KeyDown( int key ) override;
 
 	void SetLANOnly( bool lanOnly )
 	{
@@ -1156,6 +1157,28 @@ bool CMenuServerBrowser::KeyUp( int key )
 	}
 
 	return CMenuFramework::KeyUp( key );
+}
+
+bool CMenuServerBrowser::KeyDown( int key )
+{
+	// gamepads have no cursor to click the tabs with: L and R switch them
+	// (instead of paging the server list)
+	if( !m_bLanOnly && ( key == K_L1_BUTTON || key == K_R1_BUTTON ))
+	{
+		int dir = key == K_L1_BUTTON ? -1 : 1;
+		int tab = tabSwitch.GetState();
+
+		do
+		{
+			tab = ( tab + dir + INTERNET_TAB_COUNT ) % INTERNET_TAB_COUNT;
+		} while( tab == 1 ); // NAT is hidden
+
+		tabSwitch.SetState( tab );
+		PlayLocalSound( uiStatic.sounds[SND_GLOW] );
+		return true;
+	}
+
+	return CMenuFramework::KeyDown( key );
 }
 
 /*
